@@ -3,7 +3,7 @@
 A local browser tracker for Red Dead Redemption 2 playthroughs, 100% completion, optional errands, collectibles, challenges, chapter reminders, mysteries, treasure and freeform trail notes.
 
 ## Version
-v1.0
+v1.1
 
 ## Notes
 - Opens on the Playthroughs page so users can create, load or switch playthroughs before reaching the dashboard.
@@ -21,3 +21,10 @@ v1.0
 - Added pinned notes, search and edit/delete controls.
 - Added empty-state behavior when no playthrough is loaded.
 - Kept Trail Journal out of 100% and Full Journal progress totals.
+
+
+## v1.1
+- Added visible app version label.
+- Added update notice support using `version.json`.
+- Added save schema/version metadata to playthrough data.
+- Added lightweight migration markers so future checklist updates can preserve existing playthroughs more safely.
