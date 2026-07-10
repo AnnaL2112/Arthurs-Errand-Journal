@@ -4,6 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Arthur's Errand Journal</title>
+  <meta name="description" content="Arthur's Errand Journal is a cozy local-save RDR2 completion tracker for playthroughs, challenges, satchels, collectibles, camp errands, mysteries, notes and treasure." />
+  <meta property="og:title" content="Arthur's Errand Journal" />
+  <meta property="og:description" content="Track your Red Dead Redemption 2 completion run with local playthrough saves, spoiler toggles and a trail journal." />
+  <meta name="theme-color" content="#9b3a2e" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f7ead1'/%3E%3Cpath d='M16 14h28a6 6 0 0 1 6 6v31H20a6 6 0 0 1-6-6V16a2 2 0 0 1 2-2Z' fill='%239b3a2e'/%3E%3Cpath d='M21 14v37M25 23h17M25 31h14M25 39h17' stroke='%23fff8e8' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M45 19l4-4 4 4-4 4-4-4Z' fill='%23c89d43'/%3E%3C/svg%3E" />
   <style>
     :root{
       --ink:#3d2a1e;
@@ -49,6 +54,7 @@
     button,input,select,textarea{font:inherit;color:inherit}
     button{cursor:pointer}
     a{color:inherit}
+    ::selection{background:rgba(200,157,67,.32);color:var(--coffee)}
     .app{max-width:1260px;margin:0 auto;padding:24px 18px 64px;}
     .hero{
       display:flex; gap:20px; align-items:stretch; justify-content:space-between;
@@ -65,11 +71,16 @@
       overflow:hidden;
     }
     .brand:after{
-      content:"★";
-      position:absolute; right:24px; top:16px;
-      font-size:48px; transform:rotate(10deg); opacity:.38;
+      content:"";
+      position:absolute; right:22px; top:16px;
+      width:76px; height:76px;
+      opacity:.36;
+      transform:rotate(4deg);
+      background-repeat:no-repeat;
+      background-size:contain;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M23 17h41c9 0 16 7 16 16v50H31c-8 0-14-6-14-14V23c0-3 2-6 6-6Z' fill='none' stroke='%235a3424' stroke-width='6' stroke-linejoin='round'/%3E%3Cpath d='M32 17v61M40 35h25M40 49h20M40 63h25' stroke='%235a3424' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M70 20l7-7 7 7-7 7-7-7Z' fill='%23c89d43' stroke='%235a3424' stroke-width='4'/%3E%3C/svg%3E");
     }
-    h1{font-family:Georgia,serif;font-size:clamp(30px,5vw,60px);line-height:.95;margin:0 0 8px;color:var(--coffee);letter-spacing:-.04em;}
+    h1{font-family:Georgia,serif;font-size:clamp(30px,5vw,60px);line-height:.95;margin:0 0 8px;color:var(--coffee);letter-spacing:-.04em;text-shadow:0 2px 0 rgba(255,248,232,.78);} 
     .subtitle{font-size:15px;color:var(--muted);max-width:760px;}
     .current-card{
       min-width:310px;
@@ -323,6 +334,313 @@
     .route-title{font-weight:1000;color:var(--coffee);font-size:18px;margin-bottom:6px;}
     .route-list{margin:8px 0 0;padding-left:20px;color:#5a4537;}
     .route-list li{margin:5px 0;}
+
+
+    /* v1.3 Field Journal visual pass
+       Keeps the existing layout, but makes the interface feel more like a worn paper journal. */
+    :root{
+      --ink:#38271d;
+      --muted:#77614f;
+      --paper:#f5e3c4;
+      --paper-2:#fff5df;
+      --paper-3:#e6cfaa;
+      --coffee:#4a2d20;
+      --rust:#8f3b2d;
+      --gold:#bd9140;
+      --line:rgba(74,45,32,.24);
+      --shadow:0 12px 30px rgba(48,31,20,.16);
+      --radius:18px;
+    }
+    body{
+      background:
+        radial-gradient(circle at 10% 8%, rgba(189,145,64,.20), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(143,59,45,.13), transparent 30%),
+        radial-gradient(circle at 28% 94%, rgba(89,107,72,.13), transparent 34%),
+        linear-gradient(135deg, #d4ad78 0%, #f0ddbd 38%, #e7cda4 72%, #c99b61 100%);
+      background-attachment:fixed;
+    }
+    body:before{
+      background-image:
+        radial-gradient(circle, rgba(74,45,32,.105) 0 1px, transparent 1.25px),
+        radial-gradient(circle, rgba(255,248,232,.42) 0 1px, transparent 1.35px),
+        linear-gradient(110deg, rgba(74,45,32,.035), transparent 36%, rgba(255,248,232,.08) 63%, transparent 100%);
+      background-size: 21px 21px, 31px 31px, 100% 100%;
+      background-position: 0 0, 12px 8px, 0 0;
+      opacity:.65;
+      mix-blend-mode:multiply;
+    }
+    body:after{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:radial-gradient(ellipse at center, transparent 0 58%, rgba(74,45,32,.16) 100%);
+      opacity:.55;
+    }
+    .app{position:relative;z-index:1;}
+    .brand,
+    .current-card,
+    .panel,
+    .modal{
+      position:relative;
+      overflow:hidden;
+      border-color:rgba(74,45,32,.25);
+      background:
+        linear-gradient(180deg, rgba(255,247,224,.92), rgba(245,227,196,.90)),
+        repeating-linear-gradient(180deg, transparent 0 31px, rgba(74,45,32,.035) 32px);
+      box-shadow:0 18px 42px rgba(48,31,20,.18), inset 0 0 0 1px rgba(255,248,232,.55);
+    }
+    .brand{
+      border-radius:20px 28px 28px 20px;
+      padding-left:34px;
+    }
+    .brand:before,
+    .panel:before,
+    .current-card:before{
+      content:"";
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:12px;
+      background:linear-gradient(180deg, rgba(90,52,36,.34), rgba(143,59,45,.16), rgba(90,52,36,.30));
+      border-right:1px solid rgba(255,248,232,.52);
+      pointer-events:none;
+    }
+    .current-card{border-radius:20px 26px 26px 20px;padding-left:24px;}
+    .panel{border-radius:18px 24px 24px 18px;padding-left:28px;}
+    .brand:after{opacity:.24;filter:sepia(.2);}
+    h1{
+      color:#44291d;
+      text-shadow:0 1px 0 rgba(255,248,232,.85), 0 2px 10px rgba(74,45,32,.08);
+    }
+    .subtitle{color:#6d5544;line-height:1.5;}
+    .version-chip,
+    .pill,
+    .tag{
+      background:rgba(255,248,232,.56);
+      border-color:rgba(74,45,32,.24);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+    }
+    .version-chip{
+      border-radius:8px;
+      letter-spacing:.1em;
+      transform:rotate(-.4deg);
+    }
+    .tabs{
+      gap:6px;
+      padding:12px 0 0;
+      margin-bottom:18px;
+      backdrop-filter:none;
+      border-bottom:2px solid rgba(74,45,32,.24);
+    }
+    .tab{
+      border-radius:14px 14px 0 0;
+      border-color:rgba(74,45,32,.22);
+      border-bottom:0;
+      padding:11px 15px 12px;
+      background:linear-gradient(180deg, rgba(255,248,232,.88), rgba(230,207,170,.72));
+      color:#6a5140;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+    }
+    .tab.active{
+      background:linear-gradient(180deg, #593624, #43291d);
+      color:#fff6df;
+      border-color:rgba(74,45,32,.35);
+      box-shadow:0 -2px 0 rgba(255,248,232,.25) inset;
+    }
+    .btn,
+    .timer-btn,
+    .qty-btn,
+    .hint-toggle,
+    .section-toggle,
+    .card-toggle,
+    .child-toggle{
+      border-radius:10px;
+      box-shadow:0 3px 0 rgba(74,45,32,.13);
+    }
+    .btn:hover{box-shadow:0 4px 0 rgba(74,45,32,.14)}
+    .btn:active{box-shadow:0 1px 0 rgba(74,45,32,.14)}
+    .btn.primary{background:linear-gradient(180deg, #9b4433, #7f3428);}
+    .btn.sage{background:linear-gradient(180deg, #8b9e77, #6f805f);}
+    .btn.denim{background:linear-gradient(180deg, #6d8797, #536c7e);}
+    .journal-card,
+    .item-card,
+    .stat-card,
+    .route-card,
+    .trail-note-card,
+    .meter-card,
+    .custom-card,
+    .child-group,
+    .mini-item,
+    .donation-box,
+    .timer-box{
+      border-color:rgba(74,45,32,.18);
+      background:
+        linear-gradient(180deg, rgba(255,248,232,.84), rgba(247,234,210,.82)),
+        repeating-linear-gradient(180deg, transparent 0 28px, rgba(74,45,32,.032) 29px);
+      box-shadow:0 6px 18px rgba(48,31,20,.08), inset 0 1px 0 rgba(255,255,255,.45);
+    }
+    .journal-card,
+    .item-card,
+    .stat-card,
+    .route-card,
+    .trail-note-card{border-radius:14px;}
+    .item-card.done,
+    .quantity-child.done,
+    .child-subitem.done{
+      background:
+        linear-gradient(180deg, rgba(239,247,229,.78), rgba(247,234,210,.86)),
+        repeating-linear-gradient(180deg, transparent 0 28px, rgba(74,45,32,.03) 29px);
+      border-color:rgba(89,107,72,.34);
+    }
+    .section-title{
+      border-radius:8px;
+      border:1px solid rgba(74,45,32,.20);
+      background:
+        linear-gradient(90deg, rgba(90,52,36,.15), rgba(200,157,67,.10), rgba(255,248,232,.08));
+      box-shadow:inset 0 -1px 0 rgba(74,45,32,.10);
+      padding:11px 13px;
+    }
+    .section-title-main:before{
+      content:"✦";
+      color:rgba(143,59,45,.78);
+      font-size:12px;
+      transform:translateY(-1px);
+    }
+    .section-note,
+    .field-note,
+    .strategy-note,
+    .detail-box{
+      background:rgba(255,248,232,.42);
+      border-color:rgba(74,45,32,.16);
+    }
+    .field-note{border-left-color:rgba(189,145,64,.72);}
+    .strategy-note{border-left-color:rgba(96,125,145,.72);}
+    .input,
+    select,
+    textarea{
+      border-radius:10px;
+      background:rgba(255,248,232,.78);
+      border-color:rgba(74,45,32,.22);
+      box-shadow:inset 0 1px 3px rgba(48,31,20,.05);
+    }
+    .bar,
+    .timer-track{background:rgba(74,45,32,.14);}
+    .fill,
+    .timer-fill{background:linear-gradient(90deg, #75885f, #bd9140);}
+    .empty{
+      background:rgba(255,248,232,.38);
+      border-color:rgba(74,45,32,.25);
+      border-radius:14px;
+    }
+    .toast{border-radius:12px;background:#44291d;}
+
+
+
+    /* v1.4 Desktop journal index tabs
+       Moves the main navigation into a side-mounted paper-tab rail on desktop,
+       while keeping the original top-scroll tabs on smaller screens. */
+    .journal-shell{
+      display:block;
+    }
+    .journal-page{
+      min-width:0;
+    }
+    @media (min-width:921px){
+      .app{
+        max-width:1360px;
+      }
+      .journal-shell{
+        display:grid;
+        grid-template-columns:224px minmax(0,1fr);
+        gap:20px;
+        align-items:start;
+        margin-top:18px;
+      }
+      .tabs{
+        position:sticky;
+        top:18px;
+        z-index:18;
+        display:flex;
+        flex-direction:column;
+        overflow:visible;
+        gap:5px;
+        padding:42px 0 18px 0;
+        margin:0;
+        border:2px solid rgba(74,45,32,.25);
+        border-right-width:0;
+        border-radius:18px 0 0 18px;
+        background:
+          linear-gradient(180deg, rgba(82,48,31,.88), rgba(65,39,28,.92)),
+          repeating-linear-gradient(180deg, transparent 0 30px, rgba(255,248,232,.04) 31px);
+        box-shadow:0 16px 34px rgba(48,31,20,.16), inset -1px 0 0 rgba(255,248,232,.22);
+      }
+      .tabs:before{
+        content:"Journal Index";
+        position:absolute;
+        top:14px;
+        left:16px;
+        right:12px;
+        font-family:Georgia,serif;
+        font-size:13px;
+        letter-spacing:.14em;
+        text-transform:uppercase;
+        color:rgba(255,246,223,.78);
+        border-bottom:1px solid rgba(255,248,232,.20);
+        padding-bottom:8px;
+      }
+      .tabs:after{
+        content:"";
+        position:absolute;
+        right:-8px;
+        top:16px;
+        bottom:16px;
+        width:8px;
+        background:linear-gradient(180deg, rgba(255,248,232,.35), rgba(189,145,64,.18), rgba(255,248,232,.30));
+        border-radius:0 999px 999px 0;
+        border-right:1px solid rgba(74,45,32,.16);
+        pointer-events:none;
+      }
+      .tab{
+        width:calc(100% + 12px);
+        margin:0 0 0 12px;
+        justify-content:flex-start;
+        text-align:left;
+        border:1px solid rgba(74,45,32,.28);
+        border-left:0;
+        border-radius:0 13px 13px 0;
+        padding:10px 12px 10px 14px;
+        white-space:normal;
+        line-height:1.15;
+        background:
+          linear-gradient(90deg, rgba(255,248,232,.92), rgba(235,213,176,.88));
+        color:#574031;
+        box-shadow:3px 3px 8px rgba(35,22,15,.12), inset 0 1px 0 rgba(255,255,255,.48);
+        transform:translateX(0);
+        transition:.15s ease;
+      }
+      .tab:hover:not(:disabled){
+        transform:translateX(4px);
+        color:#3f2a1e;
+      }
+      .tab.active{
+        transform:translateX(10px);
+        color:#fff6df;
+        background:linear-gradient(90deg, #8f3b2d, #4a2d20);
+        border-color:rgba(74,45,32,.42);
+        box-shadow:5px 5px 12px rgba(35,22,15,.16), inset 0 1px 0 rgba(255,248,232,.22);
+      }
+      .tab:disabled{
+        opacity:.48;
+        filter:saturate(.65);
+        cursor:not-allowed;
+      }
+      .journal-page{
+        min-width:0;
+      }
+      .journal-page > .panel:first-child{
+        margin-top:0;
+      }
+    }
+
     @media (max-width:920px){
       .hero,.dashboard-grid,.manager-grid,.meters{grid-template-columns:1fr;display:grid;}
       .current-card{min-width:0;}
@@ -339,8 +657,8 @@
     <div class="hero">
       <section class="brand">
         <h1>Arthur's Errand Journal</h1>
-        <div class="subtitle">A cozy RDR2 completion camp journal for challenges, satchels, camp upgrades, herbs, pelts, collectibles and whatever tiny cowboy errands keep multiplying in the satchel.</div>
-        <div class="version-line"><span class="version-chip" id="appVersionLabel">Version v1.1</span></div>
+        <div class="subtitle">A cozy RDR2 completion tracker for playthroughs, challenges, satchels, camp upgrades, pelts, collectibles, mysteries, treasure and all the little errands the frontier refuses to keep tidy.</div>
+        <div class="version-line"><span class="version-chip" id="appVersionLabel">Version v1.4</span></div>
       </section>
       <aside class="current-card" id="currentCard"></aside>
     </div>
@@ -353,8 +671,10 @@
       <button class="btn primary" onclick="window.location.reload()">Refresh to Update</button>
     </div>
 
-    <nav class="tabs" id="tabs"></nav>
-    <main id="view"></main>
+    <div class="journal-shell">
+      <nav class="tabs" id="tabs" aria-label="Journal sections"></nav>
+      <main id="view" class="journal-page"></main>
+    </div>
   </div>
 
   <div class="modal-backdrop" id="journalModal">
@@ -422,7 +742,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-  const APP_VERSION = "1.1";
+  const APP_VERSION = "1.4";
   const SAVE_SCHEMA_VERSION = 2;
   const VERSION_URL = "version.json";
   const STORAGE_KEY = "aleg.journals.v1";
