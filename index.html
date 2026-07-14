@@ -227,9 +227,33 @@
     .hint-hidden{font-size:12px;color:var(--muted);font-style:italic;}
     .item-card.wide{grid-column:1/-1;}
     .child-progress{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:1000;background:rgba(130,152,111,.16);border:1px solid rgba(90,52,36,.14);color:#5f4a39;margin-top:8px;}
-    .mini-list.many{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+    .mini-list.many{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
     .mini-item{border:1px solid rgba(90,52,36,.10);background:rgba(255,255,255,.28);border-radius:13px;padding:7px 8px;}
+    .mini-item, .child-subitem, .child-group{
+      text-transform:none;
+      letter-spacing:0;
+    }
+    .mini-item b, .child-subitem b, .child-group-title{
+      display:block;
+      color:var(--coffee);
+      font-size:13px;
+      line-height:1.25;
+      text-transform:none;
+      letter-spacing:.01em;
+    }
     .mini-item small{color:var(--muted);line-height:1.35;}
+    .child-detail{
+      display:block;
+      margin-top:5px;
+      color:#6d5544;
+      font-size:12px;
+      line-height:1.5;
+      font-weight:650;
+      text-transform:none;
+      letter-spacing:0;
+    }
+    .child-detail-line{display:block;margin-top:3px;}
+    .child-detail-label{font-weight:1000;color:var(--coffee);}
     .mini-item input{margin-top:3px;accent-color:var(--success)}
 
     .section-title-main{display:flex;align-items:center;gap:8px;min-width:0;}
@@ -658,7 +682,7 @@
       <section class="brand">
         <h1>Arthur's Errand Journal</h1>
         <div class="subtitle">A cozy RDR2 completion tracker for playthroughs, challenges, satchels, camp upgrades, pelts, collectibles, mysteries, treasure and all the little errands the frontier refuses to keep tidy.</div>
-        <div class="version-line"><span class="version-chip" id="appVersionLabel">Version v1.4</span></div>
+        <div class="version-line"><span class="version-chip" id="appVersionLabel">Version v1.6</span></div>
       </section>
       <aside class="current-card" id="currentCard"></aside>
     </div>
@@ -742,7 +766,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-  const APP_VERSION = "1.4";
+  const APP_VERSION = "1.6";
   const SAVE_SCHEMA_VERSION = 2;
   const VERSION_URL = "version.json";
   const STORAGE_KEY = "aleg.journals.v1";
@@ -1730,6 +1754,11 @@
       c("Investigate the hideout", "Go to Lucky's Cabin southwest of Valentine, find the burned hut and enter the cellar hatch.", [], {hintSensitive:true}),
       c("Finish the trail", "After the cellar encounter, hogtie the suspect and take him to the Valentine Sheriff's Office.", [], {hintSensitive:true})
     ]}),
+    c("Lost Letter to Bonnie", "A shoreline random encounter with a unique letter. Details stay hidden until hints are on.", [], {hintSensitive:true, hiddenDesc:"Details hidden. A shoreline random encounter with a unique letter.", hintDetail:"Look along shoreline encounter areas such as near Flatneck Station or outside Van Horn. The encounter involves a shipwrecked/wounded man tied to Bonnie MacFarlane's story.", fieldNote:"Loot/interact carefully when the encounter appears so you do not miss the letter.", strategy:"The man may still react when looted. Check the body and read the Lost Letter to Bonnie from your satchel/documents afterward.", children:[
+      c("Find the shoreline encounter", "Shoreline random encounter areas include near Flatneck Station or outside Van Horn.", [], {hintSensitive:true}),
+      c("Collect the letter", "Loot/interact with the wounded man and collect the Lost Letter to Bonnie.", [], {hintSensitive:true}),
+      c("Read the letter", "Open the note from your satchel/documents to record the lore thread.", [], {hintSensitive:true})
+    ]}),
     c("Late-Night Rail Sighting", "A time-specific rail encounter. Location and time stay hidden until hints are on.", [], {hintSensitive:true, hiddenDesc:"Details hidden. A time-specific rail encounter.", hintDetail:"Scarlett Meadows, Lemoyne: ride the tracks near Old Greenbank Mill around 3:00 AM. It may take a few passes and is commonly treated as a once-per-playthrough encounter.", fieldNote:"Make a manual save nearby before waiting through the night window.", strategy:"Arrive before 3:00 AM, keep moving along the tracks near the Lemoyne sign/Old Greenbank Mill area and avoid causing noise or combat nearby.", children:[
       c("Witness the rail sighting", "Scarlett Meadows tracks near Old Greenbank Mill, around 3:00 AM.", [], {hintSensitive:true})
     ]}),
@@ -1741,6 +1770,12 @@
     c("Strange Light Sightings", "Night-sky events tied to specific places and times. Details stay hidden until hints are on.", [], {hintSensitive:true, hiddenDesc:"Details hidden. Night-sky events tied to specific places and times.", hintDetail:"Two main sightings: Hani's Bethel north of Emerald Ranch and Mount Shann in Big Valley. Both are late-night sky events, commonly around 2:00 AM.", fieldNote:"Save before waiting; time of night matters.", strategy:"Read the clue at Hani's Bethel first. For either sighting, wait until the late-night window and look up rather than running around outside.", children:[
       c("Northern strange light", "Hani's Bethel, north of Emerald Ranch. Read the Mysterious Sermon, then return/stay inside around 2:00 AM and look up.", [], {hintSensitive:true}),
       c("Mountain strange light", "Mount Shann summit in Big Valley, West Elizabeth. Go around 2:00 AM and watch the sky from the peak.", [], {hintSensitive:true})
+    ]}),
+    c("Eerie Commune / Hani's Bethel", "A secluded commune scene with skeletons, a sermon note and small loot. Details stay hidden until hints are on.", [], {hintSensitive:true, hiddenDesc:"Details hidden. A secluded commune scene with skeletons and a note.", hintDetail:"Hani's Bethel in the Heartlands of New Hanover, slightly north of the main road toward Emerald Ranch. Inside are skeletons, tonics, a cigarette card and the Mysterious Sermon note.", fieldNote:"Inspect the tables and bodies before leaving; this location also ties into one of the strange light sightings.", strategy:"Read/collect the Mysterious Sermon, grab the cigarette card and tonics, then return at the correct night window if you want the related sky event.", children:[
+      c("Find Hani's Bethel", "Heartlands, New Hanover, north of the main road heading toward Emerald Ranch.", [], {hintSensitive:true}),
+      c("Inspect the skeletons", "Look inside the secluded building and inspect the scene.", [], {hintSensitive:true}),
+      c("Read Mysterious Sermon", "Collect/read the note on the table.", [], {hintSensitive:true}),
+      c("Loot tonics and cigarette card", "Check the tables and interior before leaving.", [], {hintSensitive:true})
     ]}),
     c("Mysterious Cauldron", "A strange wilderness discovery. Location stays hidden until hints are on.", [], {hintSensitive:true, hiddenDesc:"Details hidden. A strange wilderness discovery.", hintDetail:"Witches Cauldron in Grizzlies East, Ambarino. Find the hut with the bubbling cauldron and mysterious liquid.", fieldNote:"Save before drinking anything strange in the wilderness.", strategy:"Drinking the liquid causes a blackout and Arthur wakes nearby with fortified cores. Loot the small items around the hut before leaving.", children:[
       c("Find the cauldron", "Witches Cauldron, Grizzlies East, Ambarino.", [], {hintSensitive:true}),
@@ -1867,10 +1902,25 @@
   const hiddenRiches = [
     c("Limpany Gold Bar", "Search the burned sheriff's office in Limpany, under the desk/lockbox area.", ["Gold Bar"], {hintSensitive:true}),
     c("Derailed Train Gold Bars", "Grizzlies East train wreck: climb to the upright train car for two gold bars.", ["Gold Bars"], {hintSensitive:true, fieldNote:"Save first. The climb can turn Arthur into frontier confetti."}),
-    c("Braithwaite Manor Gold Bar", "After the manor burns, search the ruined mansion for the lockbox/gold bar.", ["Chapter 4+", "Gold Bar"], {hintSensitive:true}),
+    c("Braithwaite Manor Aftermath", "Return after the manor burns to collect Catherine's Brooch and the hidden gold bar. Details stay hidden until locations are shown.", ["Chapter 4+", "Gold Bar", "Unique Loot"], {hintSensitive:true, hiddenDesc:"Details hidden. Return after the manor burns for a unique brooch and hidden gold bar.", hintDetail:"After completing Chapter 3 mission 'Blood Feuds, Ancient and Modern,' return to the burned Braithwaite Manor ruins in southern Lemoyne. Loot Catherine Braithwaite's body inside the main ruins for Catherine's Brooch, then check the adjacent ruined room for the hidden lockbox/gold bar.", fieldNote:"Return after the fire before you forget; this is easy to miss during normal story momentum.", children:[
+      c("Return after 'Blood Feuds, Ancient and Modern'", "Go back to the burned Braithwaite Manor ruins after the Chapter 3 mission.", [], {hintSensitive:true}),
+      c("Loot Catherine's Brooch", "Find and loot Mrs. Braithwaite's burned body inside the main building ruins.", [], {hintSensitive:true}),
+      c("Collect hidden gold bar", "From the body, check the adjacent ruined room and the hidden lockbox tucked near the wall/corner.", [], {hintSensitive:true})
+    ]}),
     strangeStatuesPuzzleEntry || c("Strange Statues Puzzle", "Puzzle reward: three gold bars. Details stay hidden until hints are on.", ["Gold Bars"], {hintSensitive:true}),
     c("Sketched Map Treasure", "Find the sketched map near Roanoke Ridge/Reed Cottage, then follow it near Elysian Pool for a gold ingot.", ["Gold Ingot"], {hintSensitive:true}),
     c("Chick's Treasure", "Chapter 2 debt collection map for Chick Matthews. Recover the small camp cash stash from the marked tree.", ["Debt", "Camp Money"], {hintSensitive:true})
+  ];
+
+  const hiddenCaches = [
+    c("Two Skeletons by a Dead Tree", "A hidden Cumberland Forest stash. Location and reward details stay hidden until locations are shown.", ["Cash Stash", "Jewelry"], {hintSensitive:true, hiddenDesc:"Details hidden. A hidden stash marked by two skeletons and a dead tree.", hintDetail:"Location: Cumberland Forest area, east/southeast of Fort Wallace and southwest of Moonstone Pond. Steps: look for an elevated grassy ledge with a dead leafless tree, then check the hidden lockbox near the two skeletons. Reward: two billfolds, two small jewelry bags and one large jewelry bag."}),
+    c("Abandoned Trading Post Floorboard Stash", "Loose-floorboard cash stash in the old Brandywine Drop Station. Details stay hidden until locations are shown.", ["Cash Stash"], {hintSensitive:true, hiddenDesc:"Details hidden. Loose-floorboard stash in an abandoned trading post.", hintDetail:"Location: Roanoke Ridge, New Hanover. The Abandoned Trading Post, formerly Brandywine Drop Station, sits by the railway tracks north of Annesburg, east of Meteorite House and southwest of Doverhill. Steps: inside the cabin, stand near the loose floorboard directly in front of the entrance until the Search prompt appears. Reward: $15."}),
+    c("Hidden Bridge Lockbox", "A reservation bridge stash with a pamphlet and valuables. Details stay hidden until locations are shown.", ["Pamphlet", "Jewelry"], {hintSensitive:true, hiddenDesc:"Details hidden. A lockbox hidden under a small bridge.", hintDetail:"Location: Wapiti Indian Reservation, northern Ambarino. Steps: search under the small wooden bridge that leads toward the abandoned house, not the main trail bridge. If you find nothing, check the second similar wooden bridge closer to the abandoned house. Reward: Dynamite Arrow Pamphlet, Large Jewelry Bag and Guarma Rum."}),
+    c("Saint Denis Shack Stash", "A hidden wall lockbox and floorboard pamphlet north of Saint Denis. Details stay hidden until locations are shown.", ["Cash", "Pamphlet"], {hintSensitive:true, hiddenDesc:"Details hidden. A shack stash near Saint Denis.", hintDetail:"Location: empty shack just north of the Saint Denis cemetery, near the train tracks and roads. Steps: step inside if the outside wall prompt will not appear, loot the hollow-wall lockbox for billfolds, then search the loose floorboard for the Poison Throwing Knife Pamphlet. Important: read the pamphlet from Documents so Arthur learns it."}),
+    c("O'Creagh's Run Stone Wall Cash Stash", "A hidden $50 stash near the Veteran's cabin. Details stay hidden until locations are shown.", ["Cash Stash"], {hintSensitive:true, hiddenDesc:"Details hidden. A hidden stone-wall cash stash near O'Creagh's Run.", hintDetail:"Grizzlies East near the southwest edge of O'Creagh's Run. Near Hamish Sinclair's cabin, find the odd matchstick arrow on a shelf in the woods west of the lake, then follow the direction to a stone wall and interact with the movable brick. Reward: $50."}),
+    c("Rotten Tree Stump Cache", "A Big Valley hollow stump stash. Details stay hidden until locations are shown.", ["Jewelry", "Gold Nugget"], {hintSensitive:true, hiddenDesc:"Details hidden. A hidden cache in a hollow stump.", hintDetail:"Big Valley, northwest of Strawberry. Follow Little Creek River north of the Monto's Rest area and look for a massive hollowed-out/rotten tree stump. Reward: Gold Nugget and jewelry bag."}),
+    c("Brick Chimney Jewelry Bag", "A lonely chimney stash. Details stay hidden until locations are shown.", ["Jewelry"], {hintSensitive:true, hiddenDesc:"Details hidden. A jewelry stash in a standalone chimney.", hintDetail:"Find the standalone brick chimney in the wilderness and loot/search it twice to pull out the jewelry bag. Use this as a curated stash note rather than a generic lockbox entry."}),
+    c("Broken Wagon Chest", "A hidden chest under a broken wagon near Twin Stack Pass. Details stay hidden until locations are shown.", ["Jewelry", "Supplies"], {hintSensitive:true, hiddenDesc:"Details hidden. A hidden chest tucked beneath a broken wagon.", hintDetail:"New Hanover, Twin Stack Pass. At the three-way intersection south of Heartland Oil Fields and east of Valentine, walk behind the broken wagon and use the prompt to pull out the chest. Possible reward: Gold Necklace, bourbon and elixirs."})
   ];
 
   const specialMoneySetups = [
@@ -1880,7 +1930,29 @@
 
   addChecklistBundle({id:"retirement_treasure_chains",tab:"money",section:"Treasure Map Chains",title:"Treasure Map Chains",desc:"Arthur's long-form treasure hunts. Completing one full chain also counts toward the 100% treasure requirement. Turn on locations when you want direct clue steps.",children:retirementTreasureChains,tags:["Gold", "Treasure", "100% minimum 1"],true100:true,goblin:true,minRequired:1,tip:"Some treasure chains also help Explorer challenges. Leave locations hidden if you want to solve the maps honestly."});
   addChecklistBundle({id:"retirement_hidden_riches",tab:"money",section:"Gold Bars & Hidden Riches",title:"Gold Bars & Hidden Riches",desc:"One-off gold bars, ingots and hidden money encounters. Locations stay behind the section toggle.",children:hiddenRiches,tags:["Gold", "Hidden Loot"],true100:false,goblin:true,tip:"Sell gold bars at a fence when you need cash. Save before any tricky climb or puzzle."});
+  addChecklistBundle({id:"retirement_hidden_caches",tab:"money",section:"Hidden Caches & Cash Stashes",title:"Hidden Caches & Cash Stashes",desc:"Curated hidden lockboxes, cash stashes and valuable finds. This is not every random camp lockbox; locations stay behind the section toggle.",children:hiddenCaches,tags:["Hidden Loot", "Cash Stashes"],true100:false,goblin:true,tip:"Curated stashes only. If it is just a random camp box, it stays off the ledger."});
   addChecklistBundle({id:"retirement_money_setups",tab:"money",section:"Money Setups & Reminders",title:"Money Setups & Reminders",desc:"Late-story cash reminders for spending, selling and planning around Arthur's funds.",children:specialMoneySetups,tags:["Money", "Chapter Timing"],true100:false,goblin:true,tip:"These are planning reminders, not official 100% requirements."});
+
+  const uniqueLoot = [
+    c("Shark Tooth Shipwreck", "A hidden trinket in a northeastern coast shipwreck. Details stay hidden until locations are shown.", ["Trinket", "Unique Loot"], {hintSensitive:true, hiddenDesc:"Details hidden. A shipwreck lockbox with a unique trinket.", hintDetail:"Far northeastern coast, east/northeast of Annesburg. Follow the shoreline to the northern edge of the map and look for a broken weathered boat on the beach. Open the lockbox beside the wreck to collect the Shark Tooth Trinket, which boosts horse bonding experience.", children:[
+      c("Find the shipwreck", "Far northeastern coast east/northeast of Annesburg; broken boat on the beach.", [], {hintSensitive:true}),
+      c("Open the lockbox", "Check beside the wrecked boat for the lockbox.", [], {hintSensitive:true}),
+      c("Collect Shark Tooth Trinket", "Pick up the trinket and confirm it is added to Arthur's perks.", [], {hintSensitive:true})
+    ]}),
+    c("Veteran's Homestead Loot", "Hamish Sinclair's cabin can be looted before starting The Veteran. Details stay hidden until locations are shown.", ["Missable-ish", "Supplies"], {hintSensitive:true, hiddenDesc:"Details hidden. A homestead stash tied to a stranger mission location.", hintDetail:"East of O'Creagh's Run in Grizzlies East. This is Hamish Sinclair's cabin from The Veteran stranger chain. You can loot it before starting the mission without negative story consequences, but once the stranger mission has begun, you cannot rob it the same way. Does not count toward Breaking and Entering.", fieldNote:"Loot before starting 'The Veteran' if you want the supplies; it is not required for 100%.", children:[
+      c("Visit before starting 'The Veteran'", "East of O'Creagh's Run at Hamish Sinclair's cabin, before starting the stranger chain.", [], {hintSensitive:true}),
+      c("Loot gold pocket watch", "Search the cabin interior.", [], {hintSensitive:true}),
+      c("Loot money clip", "Money Clip is worth about $12.", [], {hintSensitive:true}),
+      c("Loot supplies", "Fine Brandy, food provisions and other useful items may be inside.", [], {hintSensitive:true})
+    ]}),
+    c("Beryl's Dream Mine Loot", "A mine cleanup item with a rare knife, nugget and hat reference. Details stay hidden until locations are shown.", ["Rare Weapon", "Unique Loot"], {hintSensitive:true, hiddenDesc:"Details hidden. Mine loot behind a cave-in.", hintDetail:"Beryl's Dream mine in Big Valley, northwest of Strawberry and west of Mount Shann. Use the dynamite plunger inside to clear the cave-in, crawl through and turn right into the secondary chamber. Loot the dead miner area for the Wide-Blade Knife and Gold Nugget. The Miner’s Hat is tracked in Found Hats & Masks to avoid duplicate completion boxes.", fieldNote:"This location also contains the saveable Miner's Hat, tracked in the hat section.", children:[
+      c("Clear cave-in with plunger", "Inside Beryl's Dream mine, use the dynamite detonator/plunger near the rockslide.", [], {hintSensitive:true}),
+      c("Collect Wide-Blade Knife", "Found beside the dead miner in the cleared mine chamber.", [], {hintSensitive:true}),
+      c("Collect Gold Nugget", "Near the miner's right hand in the secondary chamber.", [], {hintSensitive:true}),
+      c("Check Miner's Hat entry if wanted", "The saveable Miner's Hat is tracked under Optional Errands > Hats & Found Gear, not duplicated here.", [], {hintSensitive:true})
+    ]})
+  ];
+  addChecklistBundle({id:"unique_loot_keepsakes",tab:"optional",section:"Unique Loot & Keepsakes",title:"Unique Loot & Keepsakes",desc:"Unique trinkets, letters and keepsake loot that are useful, memorable or easy to miss. Locations stay behind the section toggle.",children:uniqueLoot,tags:["Optional","Unique Loot"],true100:false,goblin:true,tip:"These are curated finds, not every random drawer and lockbox Arthur can bother."});
 
   const foundHats = [
     ["Chinese Skull Cap","Camp northeast of Armadillo."],
@@ -2251,7 +2323,7 @@
   }
 
   function hintToggleLabel(section, hintsOn){
-    const locationSections = ["Hats", "Found Gear", "Treasure", "Gold Bars", "Money Setups", "Community Tricks", "Community Tricks & Player Setups", "Player Setups", "Legendary", "Animal Material", "Mysteries"];
+    const locationSections = ["Hats", "Found Gear", "Unique Loot", "Treasure", "Gold Bars", "Hidden Caches", "Cash Stashes", "Money Setups", "Community Tricks", "Community Tricks & Player Setups", "Player Setups", "Legendary", "Animal Material", "Mysteries"];
     const wantsLocations = locationSections.some(token => section.includes(token));
     if(wantsLocations) return hintsOn ? "Hide locations/details" : "Show locations/details";
     return hintsOn ? "Hide names/hints" : "Show names/hints";
@@ -2305,7 +2377,8 @@
   function helperLabel(section, tip=""){
     const text = `${section} ${tip}`.toLowerCase();
     if(section.includes("Mysteries") || text.includes("mysterious") || text.includes("strange")) return "Field Note";
-    if(section.includes("Treasure") || section.includes("Gold Bars") || section.includes("Money Setups")) return "Treasure Note";
+    if(section.includes("Treasure") || section.includes("Gold Bars") || section.includes("Hidden Caches") || section.includes("Cash Stashes") || section.includes("Money Setups")) return "Treasure Note";
+    if(section.includes("Unique Loot")) return "Keepsake Note";
     if(section.includes("Hats") || section.includes("Found Gear")) return "Wardrobe Note";
     if(section.includes("Gang Requests")) return "Camp Request Note";
     if(section.includes("Companion Activities")) return "Camp Activity Note";
@@ -2660,6 +2733,26 @@
 
   setInterval(updateTimerDisplays, 500);
 
+  function childDetailHtml(detail){
+    if(!detail) return "";
+    const raw = String(detail).trim();
+    if(!raw) return "";
+    let prepared = raw
+      .replace(/\s+(Reward:)/g, "|||$1")
+      .replace(/\s+(Location:)/g, "|||$1")
+      .replace(/\s+(Tip:)/g, "|||$1")
+      .replace(/\s+(Troubleshooting:)/g, "|||$1")
+      .replace(/\s+(Important:)/g, "|||$1")
+      .replace(/\s+(How to find it:)/gi, "|||How to find it:")
+      .replace(/\s+(What you will find:)/gi, "|||What you will find:");
+    let lines = prepared.split("|||").flatMap(part => part.split(/(?<=\.)\s+(?=[A-Z0-9$])/)).map(x=>x.trim()).filter(Boolean);
+    if(!lines.length) lines = [raw];
+    return `<span class="child-detail">${lines.map(line=>{
+      const escaped = escapeHtml(line).replace(/^(Reward|Location|Tip|Troubleshooting|Important|How to find it|What you will find):/i, '<span class="child-detail-label">$1:</span>');
+      return `<span class="child-detail-line">${escaped}</span>`;
+    }).join("")}</span>`;
+  }
+
   function renderChildItem(item, child, idx, progress, j){
     const state = childProgress(progress, idx, child);
     const label = displayChildLabel(child, item, j, state.done);
@@ -2673,7 +2766,7 @@
       return `<div class="child-group ${state.done?'done':''}">
         <div class="child-group-head">
           <input type="checkbox" ${state.done?'checked':''} onchange="toggleChild('${item.id}',${idx},this.checked)" />
-          <div class="child-group-main"><div class="child-group-title">${escapeHtml(label)}</div>${detail?`<small>${escapeHtml(detail)}</small>`:""}${fieldNote}${strategyNote}<div class="child-progress">${state.checked}/${state.total}</div></div>
+          <div class="child-group-main"><div class="child-group-title">${escapeHtml(label)}</div>${detail?childDetailHtml(detail):""}${fieldNote}${strategyNote}<div class="child-progress">${state.checked}/${state.total}</div></div>
           <button class="child-toggle" title="Expand/collapse request" onclick="toggleChildCollapse('${escapeAttr(key)}')">${collapsed?'▸':'▾'}</button>
         </div>
         <div class="child-sublist ${collapsed?'hidden':''}">
@@ -2687,10 +2780,10 @@
       const done = qty >= target;
       return `<div class="mini-item quantity-child ${done?'done':''}">
         <input type="checkbox" ${done?'checked':''} onchange="toggleChild('${item.id}',${idx},this.checked)" />
-        <span><b>${escapeHtml(label)}</b>${detail?`<br><small>${escapeHtml(detail)}</small>`:""}${fieldNote}${strategyNote}${qtyControlsHtml('child', item.id, idx, null, qty, target)}</span>
+        <span><b>${escapeHtml(label)}</b>${detail?childDetailHtml(detail):""}${fieldNote}${strategyNote}${qtyControlsHtml('child', item.id, idx, null, qty, target)}</span>
       </div>`;
     }
-    return `<label class="mini-item"><input type="checkbox" ${(progress[`child_${idx}`])?'checked':''} onchange="toggleChild('${item.id}',${idx},this.checked)" /><span><b>${escapeHtml(label)}</b>${detail?`<br><small>${escapeHtml(detail)}</small>`:""}${fieldNote}${strategyNote}</span></label>`;
+    return `<label class="mini-item"><input type="checkbox" ${(progress[`child_${idx}`])?'checked':''} onchange="toggleChild('${item.id}',${idx},this.checked)" /><span><b>${escapeHtml(label)}</b>${detail?childDetailHtml(detail):""}${fieldNote}${strategyNote}</span></label>`;
   }
 
   function renderSubChildItem(item, sub, idx, subIdx, progress, j){
@@ -2706,10 +2799,10 @@
       const done = qty >= target;
       return `<div class="child-subitem quantity-child ${done?'done':''}">
         <input type="checkbox" ${done?'checked':''} onchange="toggleSubChild('${item.id}',${idx},${subIdx},this.checked)" />
-        <span><b>${escapeHtml(label)}</b>${detail?`<br><small>${escapeHtml(detail)}</small>`:""}${fieldNote}${strategyNote}${qtyControlsHtml('subchild', item.id, idx, subIdx, qty, target)}</span>
+        <span><b>${escapeHtml(label)}</b>${detail?childDetailHtml(detail):""}${fieldNote}${strategyNote}${qtyControlsHtml('subchild', item.id, idx, subIdx, qty, target)}</span>
       </div>`;
     }
-    return `<label class="child-subitem"><input type="checkbox" ${(progress[`child_${idx}_${subIdx}`])?'checked':''} onchange="toggleSubChild('${item.id}',${idx},${subIdx},this.checked)" /><span><b>${escapeHtml(label)}</b>${detail?`<br><small>${escapeHtml(detail)}</small>`:""}${fieldNote}${strategyNote}</span></label>`;
+    return `<label class="child-subitem"><input type="checkbox" ${(progress[`child_${idx}_${subIdx}`])?'checked':''} onchange="toggleSubChild('${item.id}',${idx},${subIdx},this.checked)" /><span><b>${escapeHtml(label)}</b>${detail?childDetailHtml(detail):""}${fieldNote}${strategyNote}</span></label>`;
   }
 
   function qtyControlsHtml(kind, id, idx, subIdx, qty, target){
