@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
-  "releasedAt": "2026-07-09",
-  "notes": "Adds desktop side journal index tabs for a more field-journal feel while preserving the existing content layout and save structure."
+  "version": "1.1",
+  "releasedAt": "2026-07-06",
+  "notes": "Adds version display, future update notice support and save schema metadata/migration markers."
 }
