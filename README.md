@@ -10,15 +10,15 @@ No login required. Your playthroughs save in your own browser. Use export/import
 
 ## What it tracks
 
-- Multiple playthroughs, including Vanilla and Modded runs
-- 100% completion progress
-- Challenges with nested tasks, timers and quantity trackers
-- Satchel upgrades, camp upgrades and pelt/material planning
-- Collectibles, legendary animals, legendary fish and compendium progress
-- Chapter errands, gang requests, missables and honor-sensitive reminders
-- Mysteries, strange encounters, treasure maps and hidden riches
-- Optional errands like hats, masks and personal player setups
-- Trail Journal notes with custom tags, search, filtering and pinned entries
+Multiple playthroughs, including Vanilla and Modded runs
+100% completion progress
+Challenges with nested tasks, timers and quantity trackers
+Satchel upgrades, camp upgrades and pelt/material planning
+Collectibles, legendary animals, legendary fish and compendium progress
+Chapter errands, gang requests, missables and honor-sensitive reminders
+Mysteries, strange encounters, treasure maps, hidden riches and curated cash stashes
+Optional errands like hats, masks, unique loot, keepsakes and personal player setups
+Trail Journal notes with custom tags, search, filtering and pinned entries
 
 ## How saves work
 
@@ -40,4 +40,4 @@ Arthur's Errand Journal is free to use. If it helps your playthrough and you fee
 
 ## Version
 
-Current release: **v1.4**
+Current release: **v1.6**
